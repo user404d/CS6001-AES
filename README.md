@@ -1,34 +1,34 @@
 # CS6001-AES
 
-aes.ico
+# aes.ico
 
-  Icon image file for thumbnail of GUI.
+    Icon image file for thumbnail of GUI.
   
-test_img.jpg
+# test_img.jpg
 
-  Temporary image file used in aes_io.py to test file I/O. 
-  Will be removed when program starts becoming more complete.
+    Temporary image file used in aes_io.py to test file I/O. 
+    Will be removed when program starts becoming more complete.
   
-aes_impl.py
+# aes_impl.py
 
-  Functions implementing core AES encryption and decryption functionality.
+    Functions implementing core AES encryption and decryption functionality.
   
-aes_io.py
+# aes_io.py
 
-  Samle I/O handling.
-  Opens files and encrypts them in byte sized chunks, appending results to output file.
-  Still needs actual aes implementation functions called within them, recieving strange integer error currently.
+    Sample I/O handling.
+    Opens files and encrypts them in byte sized chunks, appending results to output file.
+    Still needs actual aes implementation functions called within them, recieving strange integer error currently.
   
 # ------- NEW -------- #
 
-aes_gui.py
+# aes_gui.py
 
-  Prototype GUI implementation.
-  Takes file path, key, and output directory as input.
-  Clicking buttons will result in actions, with information logged in text window and bottom of window about errors or successes.
-  Currently just prints button name in text window when buttons are pressed.
+    Prototype GUI implementation.
+    Takes file path, key, and output directory as input.
+    Clicking buttons will result in actions, with information logged in text window and bottom of window about errors or successes.
+    Currently just prints button name in text window when buttons are pressed.
   
-  Buttons
+  # Buttons
   
     Encrypt: 
       Takes the file path and key and encrypt the file with that key, placing it within the desired output directory.
@@ -40,7 +40,7 @@ aes_gui.py
       Generates a key for the user, in the event they don't want to provide their own during ecryption.
       Need to cause error notification if trying to do this when decrypting, or just mreove this button.
       
-  Text Fields
+  # Text Fields
   
     File Path:
       Text field for user to provide file path of the file they want to encrypt or decrypt.
