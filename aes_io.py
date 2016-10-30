@@ -1,7 +1,7 @@
 import os, struct, filecmp
 
 # Hard coded file path names, will be changed to command line args
-test_file_path = 'ugogirl.jpg'
+test_file_path = 'test_img.jpg'
 test_encrypt_path = 'test_encrypt.jpg'
 test_decrypt_path = 'test_decrypt.jpg'
 
