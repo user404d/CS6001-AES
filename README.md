@@ -1,23 +1,23 @@
 # CS6001-AES
 
-aes.ico 
+aes.ico: 
   Icon image file for thumbnail of GUI.
   
-test_img.jpg
+test_img.jpg:
   Temporary image file used in aes_io.py to test file I/O. 
   Will be removed when program starts becoming more complete.
   
-aes_impl.py
+aes_impl.py:
   Functions implementing core AES encryption and decryption functionality.
   
-aes_io.py
+aes_io.py:
   Samle I/O handling.
   Opens files and encrypts them in byte sized chunks, appending results to output file.
   Still needs actual aes implementation functions called within them, recieving strange integer error currently.
   
 # ------- NEW -------- #
 
-aes_gui.py
+aes_gui.py:
   Prototype GUI implementation.
   Takes file path, key, and output directory as input.
   Clicking buttons will result in actions, with information logged in text window and bottom of window about errors or successes.
