@@ -73,7 +73,7 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
                 # Perform aes decryption 
                 decrypted_chunk = aes.decrypt(processed_chunk, key_schedule)
 
-                # Convert the encrypted chunk back into a byte object
+                # Convert the decrypted chunk back into a byte object
                 decrypted_byte_object = b''.join(bytes(i) for i in decrypted_chunk)
 
                 # Writes currently read chunk into the output file
