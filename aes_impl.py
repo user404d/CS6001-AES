@@ -162,7 +162,7 @@ rcon = (
     b'\x36\x00\x00\x00',)
 
 """
-AES Implementation itself
+AES Implementation 
 """
 
 def rot_word(s):
@@ -242,6 +242,9 @@ def add_round_key(state, rk):
 
 def gen_key_schedule(key):
     """
+    Args:
+        key - a list of bytes of length 16, 24, or 32
+    
     generates key schedule for 128,192,256 key lengths
     inv_key_schedule currently broken
     """
@@ -272,7 +275,10 @@ def gen_key_schedule(key):
 
     return key_schedule,inv_key_schedule
 
-#implement encryption/decrytpion
+"""
+Encryption and Decryption Implementations
+"""
+
 def encrypt(data, key_schedule):
     """
     working, though above implementations should be improved
@@ -313,7 +319,7 @@ def decrypt(data, key_schedule):
 
 def nice_decrypt(data, inv_key_schedule):
     """
-    currently borked
+    currently borked, is this fixed?
     """
     state = data
     add_round_key(state, inv_key_schedule[-4:])

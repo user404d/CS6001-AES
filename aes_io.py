@@ -44,7 +44,7 @@ def decrypt_file(in_file, out_file=None, chunk_size=16):
     # Opens input file to be read as bytes
     with open(in_file, 'rb') as rfile:
 
-        # Retreives original file size from first line of encrypted file
+        # Retrieves original file size from first line of encrypted file
         origsize = struct.unpack('<Q', rfile.read(struct.calcsize('Q')))[0]
 
         # Opens output file to write bytes into

@@ -52,4 +52,5 @@
     Out Directory:
       Text field for user to provide the desired directory for the resulting encrypted/decrypted file to be placed in.
       Will default to same directory as the file given to be encrypted/decrypted.
-    
+
+
