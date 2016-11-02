@@ -1,8 +1,4 @@
 # ---- TODO ---- #
-
-	inv_key_schedule currently broken
-    
-    Implement encryption and decryption functions of AES for files of arbitrary sizes (already done?)
     
     Add more documentation 
     	(including how to install and run the program)
@@ -15,5 +11,3 @@
     Evaluate the performance between AES and RSA
 
     Write more tests 
-
-    Does nice_decrypt() still need to be fixed?

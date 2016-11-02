@@ -6,6 +6,8 @@ import string
 
 def get_byte_list_from(data_string):
     """
+    4 bit lists, not bytes?
+
     Args: 
         data_string: a string to convert to bytes
     Return:
