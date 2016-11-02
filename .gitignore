@@ -1,2 +1,4 @@
 test_decrypt.jpg
 test_encrypt.jpg
+*.pyc
+__pycache__

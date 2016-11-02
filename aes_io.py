@@ -88,6 +88,9 @@ def main():
     key_schedule, _ = aes.gen_key_schedule(key)
 
     encrypt_file(key_schedule, test_file_path, test_encrypt_path)
+
+    print(filecmp.cmp(test_file_path, test_encrypt_path))
+    
     decrypt_file(key_schedule, test_encrypt_path, test_decrypt_path)
 
     # Testing to see if decrypted file is same as original
