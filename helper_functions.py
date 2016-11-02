@@ -6,10 +6,9 @@ import string
 
 def get_byte_list_from(data_string):
     """
-    4 bit lists, not bytes?
-
     Args: 
         data_string: a string to convert to bytes
+                     length should be a multiple of 4
     Return:
         A list of lists with bytes corresponding to the data_string
     """
@@ -19,7 +18,7 @@ def generate_random_key_of_size(key_size):
     """
     Generates a random key from uppercase characters and digits.
     Args: 
-        key_size: an integer; the desired key size
+        key_size: an integer; the desired list length
     Returns:
         A list of bytes corresponding to the randomly generated key.
     """

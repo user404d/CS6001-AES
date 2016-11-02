@@ -243,7 +243,7 @@ def add_round_key(state, rk):
 def gen_key_schedule(key):
     """
     Args:
-        key - a list of bytes of length 16, 24, or 32
+        key - a list of length 16, 24, or 32 containing 
     
     generates key schedule for 128,192,256 key lengths
     inv_key_schedule currently broken
