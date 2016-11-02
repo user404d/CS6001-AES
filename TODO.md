@@ -11,8 +11,3 @@
     Evaluate the performance between AES and RSA
 
 ## Write more tests
-- Test different key lengths
-  -[x] 128 bit
-  - 192 bit
-  - 256 bit
-    
