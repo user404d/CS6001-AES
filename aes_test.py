@@ -15,8 +15,9 @@ class AESTest(unittest.TestCase):
 		key_schedule, _ = aes.gen_key_schedule(key)
 
 		aes_io.encrypt_file(key_schedule, test_file_path, test_encrypt_path)
+		self.assertFalse(filecmp.cmp(test_file_path, test_encrypt_path))
+		
 		aes_io.decrypt_file(key_schedule, test_encrypt_path, test_decrypt_path)
-
 		self.assertTrue(filecmp.cmp(test_file_path, test_decrypt_path))
 
 	def test_encryption_and_decryption(self):

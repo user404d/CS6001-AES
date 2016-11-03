@@ -17,9 +17,10 @@
 
     Sample I/O handling.
     Opens files and encrypts them in byte sized chunks, appending results to output file.
-    Still needs actual aes implementation functions called within them, recieving strange integer error currently.
   
-# ------- NEW -------- #
+# aes_test.py
+
+    Unit tests for the encryption and decryption AES functions on files and string messages.
 
 # aes_gui.py
 
