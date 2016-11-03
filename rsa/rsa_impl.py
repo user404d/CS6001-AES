@@ -77,22 +77,22 @@ def generate_keypair(p, q):
     private_key = (d, n)
     return (public_key, private_key)
 
-def encrypt(private_key_pair, plaintext):
+def encrypt(public_key, plaintext):
     """
     Encrypt the plaintext.
     """
-    key, n = private_key_pair
+    key, n = public_key
 
     # Encrypt each char using a^b mod m
     cipher = [pow(ord(char), key, n) for char in plaintext]
 
     return cipher
 
-def decrypt(public_key_pair, ciphertext):
+def decrypt(private_key, ciphertext):
     """ 
     Decrypt the ciphertext.
     """
-    key, n = public_key_pair
+    key, n = private_key
 
     # Decrypt each char using a^b mod m
     plain = [chr(pow(char, key, n)) for char in ciphertext]
