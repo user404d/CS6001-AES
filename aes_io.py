@@ -1,11 +1,12 @@
-import os, struct, filecmp, aes_impl as aes, helper_functions as helper
+import os, struct, filecmp
+import aes_impl as aes, helper_functions as helper
 
 # Hard coded file path names, will be changed to command line args
 test_file_path = 'test_img.jpg'
 test_encrypt_path = 'test_encrypt.jpg'
 test_decrypt_path = 'test_decrypt.jpg'
 
-def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
+def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
 
     # Calculating initial file size
     filesize = os.path.getsize(in_file)
@@ -22,6 +23,13 @@ def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
             # Storing initial filesize in first line
             wfile.write(struct.pack('<Q', filesize))
 
+            encrypt = None
+
+            if mode == aes.Mode.ecb:
+                encrypt = aes.ecb_encryption(key_schedule)
+            else:
+                encrypt = aes.cbc_encryption(key_schedule, iv)
+
             while True:
                 # Reads file a chunk at a time
                 chunk = rfile.read(chunk_size)
@@ -36,7 +44,7 @@ def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
                 processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
 
                 # Perform aes encryption 
-                encrypted_chunk = aes.encrypt(processed_chunk, key_schedule)
+                encrypted_chunk = encrypt(processed_chunk)
 
                 # Convert the encrypted chunk back into a byte object
                 encrypted_byte_object = b''.join(bytes(i) for i in encrypted_chunk)
@@ -44,7 +52,7 @@ def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
                 # Write chunk to output file
                 wfile.write(encrypted_byte_object) 
 
-def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
+def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
 
     # If no output file name passed, creates one based on input file name
     if not out_file:
@@ -59,6 +67,13 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
         # Opens output file to write bytes into
         with open(out_file, 'wb') as wfile:
 
+            decrypt = None
+
+            if mode == aes.Mode.ecb:
+                decrypt = aes.ecb_decryption(key_schedule)
+            else:
+                decrypt = aes.cbc_decryption(key_schedule, iv)
+
             # Iterates over entire file
             while True:
                 # Reads from input file one chunk at a time
@@ -71,7 +86,7 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16):
                 processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
 
                 # Perform aes decryption 
-                decrypted_chunk = aes.decrypt(processed_chunk, key_schedule)
+                decrypted_chunk = decrypt(processed_chunk)
 
                 # Convert the decrypted chunk back into a byte object
                 decrypted_byte_object = b''.join(bytes(i) for i in decrypted_chunk)

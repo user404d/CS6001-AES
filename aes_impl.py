@@ -1,3 +1,11 @@
+
+import copy
+from enum import Enum
+
+class Mode(Enum):
+    ecb = "ElectronicCodebook"
+    cbc = "CipherBlockChaining"
+
 """
 A bunch of magic constants (precomputed heavy lifting)
 """
@@ -243,10 +251,9 @@ def add_round_key(state, rk):
 def gen_key_schedule(key):
     """
     Args:
-        key - a list of length 16, 24, or 32 containing 
+        key - a list of length 16, 24, or 32 
     
     generates key schedule for 128,192,256 key lengths
-    inv_key_schedule currently broken
     """
     if not (len(key) in [16,24,32]):
         print("wrong key size")
@@ -276,14 +283,15 @@ def gen_key_schedule(key):
     return key_schedule,inv_key_schedule
 
 """
-Encryption and Decryption Implementations
+Encryption 
 """
 
-def encrypt(data, key_schedule):
+def aes_encryption(data, key_schedule):
     """
-    working, though above implementations should be improved
+    ElectronicCodebook
     """
-    state = data
+
+    state = copy.deepcopy(data)
     add_round_key(state, key_schedule[0:4])
     
     for r in range(1,len(key_schedule)//4 - 1):
@@ -298,11 +306,42 @@ def encrypt(data, key_schedule):
     
     return state
 
-def decrypt(data, key_schedule):
+def ecb_encryption(key_schedule):
+    def enc(data):
+        return aes_encryption(data, key_schedule)
+    return enc
+
+def cbc_encryption(key_schedule, initialization_vector):
     """
-    working
+    cipherBlockChaining
     """
-    state = data
+    IV = initialization_vector
+    KS = key_schedule
+    ciphertext = None
+
+    def enc(data):
+        nonlocal IV
+        nonlocal KS
+        nonlocal ciphertext
+
+        temp = []
+        for i, j in zip(data, IV):
+            temp.append([x^y for x,y in zip(i,j)])
+
+        ciphertext = aes_encryption(temp, KS)
+        IV = ciphertext
+        return ciphertext
+
+    return enc
+
+""" Decryption """
+
+def aes_decryption(data, key_schedule):
+    """
+    ElectronicCodebook
+    """
+
+    state = copy.deepcopy(data)
     add_round_key(state, key_schedule[-4:])
 
     for r in reversed(range(1,len(key_schedule)//4 - 1)):
@@ -317,21 +356,51 @@ def decrypt(data, key_schedule):
     
     return state
 
-def nice_decrypt(data, inv_key_schedule):
-    """
-    currently borked, is this fixed?
-    """
-    state = data
-    add_round_key(state, inv_key_schedule[-4:])
+def ecb_decryption(key_schedule):
+    def dec(data):
+        return aes_decryption(data, key_schedule)
+    return dec
 
-    for r in reversed(range(1,len(inv_key_schedule)//4 - 1)):
-        sub_bytes(state, is_box)
-        inv_shift_rows(state)
-        inv_mix_cols(state)
-        add_round_key(state, inv_key_schedule[r*4:(r+1)*4])
+def cbc_decryption(key_schedule, initialization_vector):
+    """
+    cipherBlockChaining
+    """
 
-    sub_bytes(state, is_box)
-    inv_shift_rows(state)
-    add_round_key(state, inv_key_schedule[0:4])
+    IV = initialization_vector
+    KS = key_schedule
+    plaintext = None
+
+    def dec(data):
+        nonlocal IV
+        nonlocal KS
+        nonlocal plaintext
+
+        result_decipher = aes_decryption(data, KS)
+
+        plaintext = []
+        for i, j in zip(result_decipher, IV):
+            plaintext.append([x^y for x,y in zip(i,j)])
+
+        IV = data
+        return plaintext
+
+    return dec
+
+# def nice_decrypt(data, inv_key_schedule):
+#     """
+#     currently borked, is this fixed?
+#     """
+#     state = data
+#     add_round_key(state, inv_key_schedule[-4:])
+
+#     for r in reversed(range(1,len(inv_key_schedule)//4 - 1)):
+#         sub_bytes(state, is_box)
+#         inv_shift_rows(state)
+#         inv_mix_cols(state)
+#         add_round_key(state, inv_key_schedule[r*4:(r+1)*4])
+
+#     sub_bytes(state, is_box)
+#     inv_shift_rows(state)
+#     add_round_key(state, inv_key_schedule[0:4])
     
-    return state
+#     return state
