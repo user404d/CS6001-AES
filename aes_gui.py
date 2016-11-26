@@ -1,32 +1,75 @@
 from tkinter import *
 from tkinter import ttk
+import helper_functions as helper
+import aes_impl as aes
+import os
+import aes_io
 
 """
 On click functionality of 'Encrypt' button.
 """
 def encrypt_click():
+
+    # getting file and path and checking validity
+    file_path = path_entry.get();
+    if  not os.path.isfile(file_path):
+        log_text['state'] = 'normal'
+        log_text.insert('end', "Encrypt: File Not Found.")
+        log_text['state'] = 'disabled'
+
+    # getting key value from key entry field
+    temp = key_entry.get();
+    # splitting temp into list, delimitting every 2 characters
+    key = [int(temp[i:i+2]) for i in range(0, len(temp), 2)]
+    # generating key schedule from converted key
+    key_schedule, _ = aes.gen_key_schedule(key)
+
+    aes_io.encrypt_file(key_schedule, file_path)
     log_text['state'] = 'normal'
-    log_text.insert('end', "Encrypt")
-    log_text.insert('end', "\n")
+
     log_text['state'] = 'disabled'
 
 """
 On click functionality of 'Dencrypt' button.
 """
 def decrypt_click():
+
+    # getting file and path and checking validity
+    file_path = path_entry.get();
+    if  not os.path.isfile(file_path):
+        log_text['state'] = 'normal'
+        log_text.insert('end', "Encrypt: File Not Found.")
+        log_text['state'] = 'disabled'
+
+    # getting key value from key entry field
+    temp = key_entry.get();
+    # splitting temp into list, delimitting every 2 characters
+    key = [int(temp[i:i+2]) for i in range(0, len(temp), 2)]
+    # generating key schedule from converted key
+    key_schedule, _ = aes.gen_key_schedule(key)
+
+    aes_io.decrypt_file(key_schedule, file_path, od_entry.get())
+
     log_text['state'] = 'normal'
     log_text.insert('end', "Decrypt")
     log_text.insert('end', "\n")
-    log_text['state'] = 'dsiabled'
+    log_text['state'] = 'disabled'
 
 """
 On click functionality of 'Gen. Key' button.
 """
 def genkey_click():
+    key = helper.generate_random_key(16)
+
+    temp = ""
+    for i in key:
+        temp += str(i)
+    key_entry_text.set(temp)
+
     log_text['state'] = 'normal'
     log_text.insert('end', "Generate Key")
     log_text.insert('end', "\n")
-    log_text['state'] = 'dsiabled'
+    log_text['state'] = 'disabled'
 
 
 # ------------- Graphical User Interface Code ----------- #
@@ -37,8 +80,8 @@ root.resizable(0,0) # Prevents resizing window
 root.title("AES Encryption App")
 root.iconbitmap(default='aes.ico')
 
-file_path = StringVar()
-key = StringVar()
+path_entry_text = StringVar()
+key_entry_text = StringVar()
 out_dir = StringVar()
 
 # Adding frame to root Tk window
@@ -55,12 +98,12 @@ fpkframe.grid(column=0, row=0, sticky=W)
 
 # Label and text field entry for file path
 ttk.Label(fpkframe, text="File Path: ").grid(column=0, row=0, sticky=W)
-path_entry = ttk.Entry(fpkframe, width=40, textvariable=file_path)
+path_entry = ttk.Entry(fpkframe, width=40, textvariable=path_entry_text)
 path_entry.grid(column=1, row=0, sticky=(W,E)) # Stretches entry text field
 
 # Label and text field entry for key
 ttk.Label(fpkframe, text="Key: ").grid(column=0, row=1, sticky=E)
-key_entry = ttk.Entry(fpkframe, width=40, textvariable=key)
+key_entry = ttk.Entry(fpkframe, width=40, textvariable=key_entry_text)
 key_entry.grid(column=1, row=1, sticky=(E), pady=(10,0))
 
 # Seperator line between fpk and od frames

@@ -43,14 +43,14 @@ def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
                 # Process 16 length chunk into 4 lists containing 4 numbers
                 processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
 
-                # Perform aes encryption 
+                # Perform aes encryption
                 encrypted_chunk = encrypt(processed_chunk)
 
                 # Convert the encrypted chunk back into a byte object
                 encrypted_byte_object = b''.join(bytes(i) for i in encrypted_chunk)
 
                 # Write chunk to output file
-                wfile.write(encrypted_byte_object) 
+                wfile.write(encrypted_byte_object)
 
 def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
 
@@ -85,29 +85,27 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
                 # Process 16 length chunk into 4 lists containing 4 numbers
                 processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
 
-                # Perform aes decryption 
+                # Perform aes decryption
                 decrypted_chunk = decrypt(processed_chunk)
 
                 # Convert the decrypted chunk back into a byte object
                 decrypted_byte_object = b''.join(bytes(i) for i in decrypted_chunk)
 
                 # Writes currently read chunk into the output file
-                wfile.write(decrypted_byte_object) 
+                wfile.write(decrypted_byte_object)
 
             # Truncates output file to original size, removing buffer
             wfile.truncate(origsize)
 
 # Driving function for testing
 def main():
-    key = helper.generate_random_key_of_size(16)
+    key = helper.generate_random_key(16)
     key_schedule, _ = aes.gen_key_schedule(key)
 
     encrypt_file(key_schedule, test_file_path, test_encrypt_path)
-
     print(filecmp.cmp(test_file_path, test_encrypt_path))
-    
-    decrypt_file(key_schedule, test_encrypt_path, test_decrypt_path)
 
+    decrypt_file(key_schedule, test_encrypt_path, test_decrypt_path)
     # Testing to see if decrypted file is same as original
     print(filecmp.cmp(test_file_path, test_decrypt_path))
 
