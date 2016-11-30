@@ -4,16 +4,6 @@ Helper Functions
 import random
 import string
 
-def get_byte_list_from(data_string):
-    """
-    Args: 
-        data_string: a string to convert to bytes
-                     length should be a multiple of 4
-    Return:
-        A list of lists with bytes corresponding to the data_string
-    """
-    return [list(bytes(data_string[i*4:(i+1)*4].encode('utf-8'))) for i in range(len(data_string)//4)]
-
 def generate_random_key(key_size):
     """
     Generates a random key from uppercase characters and digits.
@@ -27,6 +17,17 @@ def generate_random_key(key_size):
     return list(bytes(random_key_string, 'utf-8'))
 
 def initialization_vector(block_size=16):
+    """
+    Generate an initialization vector for AES Cipher Block Chaining Mode
+    See aes_test.py test_cbc_on_file function for example of use.
+    block_size should be the same size as the key_size.
+
+    Args:
+        block_size: an integer
+
+    Returns:
+        4 by block_size/4 sized matrix of integers. 
+    """
     chars = string.ascii_uppercase + string.digits
     random_key_string = ''.join(random.choice(chars) for _ in range(block_size))
     byte_list = list(bytes(random_key_string, 'utf-8'))
