@@ -25,6 +25,7 @@ def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
 
             encrypt = None
 
+            # Get the encryption function associated with the aes mode (ECB or CBC)
             if mode == aes.Mode.ecb:
                 encrypt = aes.ecb_encryption(key_schedule)
             else:
@@ -69,6 +70,7 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
 
             decrypt = None
 
+            # Get the decryption function associated with the aes mode (ECB or CBC)
             if mode == aes.Mode.ecb:
                 decrypt = aes.ecb_decryption(key_schedule)
             else:
@@ -99,6 +101,9 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
 
 # Driving function for testing
 def main():
+    
+    # Testing has been moved to aes_test.py
+
     key = helper.generate_random_key(16)
     key_schedule, _ = aes.gen_key_schedule(key)
 
