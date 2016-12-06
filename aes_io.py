@@ -6,99 +6,94 @@ test_file_path = 'test_img.jpg'
 test_encrypt_path = 'test_encrypt.jpg'
 test_decrypt_path = 'test_decrypt.jpg'
 
-def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
+def pkcs5(size):
+    amount_of_padding = 16 - (size % 16)
+    return bytes(chr(amount_of_padding) * amount_of_padding, 'utf-8')
 
-    # Calculating initial file size
-    filesize = os.path.getsize(in_file)
+def read_chunks(file_handle, chunk_size, padding=pkcs5):
+    while True:
+        data = file_handle.read(chunk_size)
+        if not padding and not data:
+            yield None, True
+            break
+        elif len(data) != chunk_size:
+            pad = padding(len(data))
+            yield data + pad, False
+            if len(pad) == 0:
+                return pack(0), False
+            break
+        yield data, False
+
+def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
 
     # If no output file name passed, creates one based on input file name
     if not out_file:
         out_file = in_file + '.enc'
 
     # Opens input file to be read as bytes
-    with open(in_file, 'rb') as rfile:
-        # Opens output file to write bytes into
-        with open(out_file, 'wb') as wfile:
+    # Opens output file to write bytes into
+    with open(in_file, 'rb') as rfile, open(out_file, 'wb') as wfile:
+        encrypt = None
 
-            # Storing initial filesize in first line
-            wfile.write(struct.pack('<Q', filesize))
+        # Get the encryption function associated with the aes mode (ECB or CBC)
+        if mode == aes.Mode.ecb:
+            encrypt = aes.ecb_encryption(key_schedule)
+        else:
+            encrypt = aes.cbc_encryption(key_schedule, iv)
 
-            encrypt = None
+        for chunk,_ in read_chunks(rfile, chunk_size):
+            # Process 16 length chunk into 4 lists containing 4 numbers
+            processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
+            
+            # Perform aes encryption
+            encrypted_chunk = encrypt(processed_chunk)
+            
+            # Convert the encrypted chunk back into a byte object
+            encrypted_byte_object = b''.join(bytes(i) for i in encrypted_chunk)
 
-            # Get the encryption function associated with the aes mode (ECB or CBC)
-            if mode == aes.Mode.ecb:
-                encrypt = aes.ecb_encryption(key_schedule)
-            else:
-                encrypt = aes.cbc_encryption(key_schedule, iv)
-
-            while True:
-                # Reads file a chunk at a time
-                chunk = rfile.read(chunk_size)
-                # Exits while loop if chunk is empty
-                if len(chunk) == 0:
-                    break
-                # Appends buffer to chunk if below 16 bytes
-                elif len(chunk) % 16 != 0:
-                    chunk += b' ' * (16 - len(chunk) % 16)
-
-                # Process 16 length chunk into 4 lists containing 4 numbers
-                processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
-
-                # Perform aes encryption
-                encrypted_chunk = encrypt(processed_chunk)
-
-                # Convert the encrypted chunk back into a byte object
-                encrypted_byte_object = b''.join(bytes(i) for i in encrypted_chunk)
-
-                # Write chunk to output file
-                wfile.write(encrypted_byte_object)
+            # Write chunk to output file
+            wfile.write(encrypted_byte_object)
 
 def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
 
+    decrypt_filesize = os.path.getsize(in_file)
+    
     # If no output file name passed, creates one based on input file name
     if not out_file:
         out_file = os.path.splittext(in_file)[0]
 
     # Opens input file to be read as bytes
-    with open(in_file, 'rb') as rfile:
+    with open(in_file, 'rb') as rfile, open(out_file, 'wb') as wfile:
+        decrypt = None
+        padding_size = 0
 
-        # Retrieves original file size from first line of encrypted file
-        origsize = struct.unpack('<Q', rfile.read(struct.calcsize('Q')))[0]
+        # Get the decryption function associated with the aes mode (ECB or CBC)
+        if mode == aes.Mode.ecb:
+            decrypt = aes.ecb_decryption(key_schedule)
+        else:
+            decrypt = aes.cbc_decryption(key_schedule, iv)
 
-        # Opens output file to write bytes into
-        with open(out_file, 'wb') as wfile:
+        # Iterates over entire file
+        for chunk,done in read_chunks(rfile, chunk_size, None):
+            if done:
+                decrypt_filesize -= padding_size
+                break
+            # Process 16 length chunk into 4 lists containing 4 numbers
+            processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
 
-            decrypt = None
+            # Perform aes decryption
+            decrypted_chunk = decrypt(processed_chunk)
 
-            # Get the decryption function associated with the aes mode (ECB or CBC)
-            if mode == aes.Mode.ecb:
-                decrypt = aes.ecb_decryption(key_schedule)
-            else:
-                decrypt = aes.cbc_decryption(key_schedule, iv)
+            # Convert the decrypted chunk back into a byte object
+            decrypted_byte_object = b''.join(bytes(i) for i in decrypted_chunk)
+            padding_size = decrypted_byte_object[-1]
 
-            # Iterates over entire file
-            while True:
-                # Reads from input file one chunk at a time
-                chunk = rfile.read(chunk_size)
-                # If chunk is empty, exits the while loop
-                if len(chunk) == 0:
-                    break
+            # Writes currently read chunk into the output file
+            wfile.write(decrypted_byte_object)
 
-                # Process 16 length chunk into 4 lists containing 4 numbers
-                processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
-
-                # Perform aes decryption
-                decrypted_chunk = decrypt(processed_chunk)
-
-                # Convert the decrypted chunk back into a byte object
-                decrypted_byte_object = b''.join(bytes(i) for i in decrypted_chunk)
-
-                # Writes currently read chunk into the output file
-                wfile.write(decrypted_byte_object)
-
-            # Truncates output file to original size, removing buffer
-            wfile.truncate(origsize)
-
+        # Truncates output file to original size, removing buffer
+        wfile.truncate(decrypt_filesize)
+        
 # Driving function for testing
 def main():
     

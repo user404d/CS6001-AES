@@ -78,7 +78,7 @@ def genkey_click():
 root = Tk()
 root.resizable(0,0) # Prevents resizing window
 root.title("AES Encryption App")
-root.iconbitmap(default='aes.ico')
+root.iconbitmap('aes.ico')
 
 path_entry_text = StringVar()
 key_entry_text = StringVar()
