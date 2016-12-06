@@ -23,9 +23,8 @@ def generate_random_key(key_size):
     Returns:
         A list of bytes corresponding to the randomly generated key.
     """
-    chars = string.ascii_uppercase + string.digits
-    random_key_string = ''.join(random.choice(chars) for _ in range(key_size))
-    return list(bytes(random_key_string, 'utf-8'))
+    rand_key = bytes(random.randint(0,255) for _ in range(key_size))
+    return list(rand_key)
 
 def initialization_vector(block_size=16):
     """
@@ -39,7 +38,5 @@ def initialization_vector(block_size=16):
     Returns:
         4 by block_size/4 sized matrix of integers. 
     """
-    chars = string.ascii_uppercase + string.digits
-    random_key_string = ''.join(random.choice(chars) for _ in range(block_size))
-    byte_list = list(bytes(random_key_string, 'utf-8'))
+    byte_list = generate_random_key(block_size)
     return [byte_list[i*4:(i+1)*4] for i in range(block_size//4)]
