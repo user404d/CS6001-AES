@@ -42,6 +42,7 @@ class AESTest(unittest.TestCase):
                 key_schedule, _ = aes.gen_key_schedule(key)
 
                 iv = helper.initialization_vector(data_size)
+                iv = helper.convert_to_state_matrix(iv)
 
                 aes_io.encrypt_file(key_schedule, self.test_file_path, self.test_encrypt_path, 
                                     chunk_size=data_size, mode=aes.Mode.cbc, iv=iv)
@@ -60,6 +61,7 @@ class AESTest(unittest.TestCase):
                 key_schedule, _ = aes.gen_key_schedule(key)
 
                 iv = helper.initialization_vector(data_size)
+                iv = helper.convert_to_state_matrix(iv)
 
                 encrypt = aes.cbc_encryption(key_schedule, iv)
                 encrypted_data = encrypt(data)
