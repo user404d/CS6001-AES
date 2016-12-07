@@ -60,7 +60,7 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
     
     # If no output file name passed, creates one based on input file name
     if not out_file:
-        out_file = os.path.splittext(in_file)[0]
+        out_file = os.path.splitext(in_file)[0]
 
     # Opens input file to be read as bytes
     with open(in_file, 'rb') as rfile, open(out_file, 'wb') as wfile:
