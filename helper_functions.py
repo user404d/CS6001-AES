@@ -39,4 +39,14 @@ def initialization_vector(block_size=16):
         4 by block_size/4 sized matrix of integers. 
     """
     byte_list = generate_random_key(block_size)
-    return [byte_list[i*4:(i+1)*4] for i in range(block_size//4)]
+    return byte_list
+
+def convert_to_state_matrix(lst):
+    return [lst[i:i + 4] for i in range(0, len(lst), 4)]
+
+def convert_hex_to_bytes(hex_str):
+    hex_str = hex_str[2:] if hex_str[:2] == "0x" else hex_str
+    return list(bytes([int(hex_str[i:i+2],16) for i in range(0, len(hex_str), 2)]))
+
+def convert_bytes_to_hex(byte_str):
+    return ''.join(map("{:02x}".format, byte_str))
