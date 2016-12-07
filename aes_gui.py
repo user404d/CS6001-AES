@@ -99,8 +99,7 @@ def gen_key_click():
     log_text['state'] = 'disabled'
 
 def gen_iv_click():
-    key_size = key_size_bytes.get()
-    iv = helper.initialization_vector(key_size)
+    iv = helper.initialization_vector()
     
     iv_entry_text.set(helper.convert_bytes_to_hex(iv))
 
