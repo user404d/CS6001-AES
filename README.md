@@ -1,4 +1,29 @@
 # CS6001-AES
+# Authors: Quincy Conduff, Scott Payne, Colin Conduff
+
+# Software requirements 
+1.  Python version 3 (~3.5 should be fine)  
+2.  Tkinter version 8.5 (should be included with python)
+
+# Usage: Steps to use the GUI for file encryption and decryption 
+1.  `python3 aes_gui.py`  
+2.  Select desired key length by clicking a radio button next to 128, 192, or 256.  
+3.  Click `Gen. Key` button  
+2.  Select AES mode  
+  a.  For ECB AES mode, select `ECB` radio button  
+  b.  For CBC AES mode, select `CBC` radio button and click `Gen. IV` button  
+2.  In `File Path` textbox: enter in full file path to file that you would like to encrypt  
+  Example: `/Users/username/Desktop/test.png`  
+  Note: If `Out Directory` input is empty, the program will create an encrypted file with `.enc` appended to the end (e.g. test.png.enc). 
+4.  Click `Encrypt` button  
+5.  After encryption has finished, change File Path input to the file path to the encrypted file.  
+  Example: `/Users/username/Desktop/test.png.enc`  
+  Note: If `Out Directory` input is empty, will overwrite original input file (e.g. test.png).  
+6.  Click the `Decrypt` button  
+
+# To run unit tests for AES encryption and decryption:
+`python3 aes_test.py`
+  
 
 # aes.ico
 
