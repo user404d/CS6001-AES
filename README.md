@@ -33,7 +33,6 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
 ## test_img.jpg
 
     Temporary image file used in aes_io.py to test file I/O. 
-    Will be removed when program starts becoming more complete.
   
 ## aes_impl.py
 
@@ -50,10 +49,9 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
 
 ## aes_gui.py
 
-    Prototype GUI implementation.
+    Encryption/Decryption GUI implementation.
     Takes file path, key, and output directory as input.
     Clicking buttons will result in actions, with information logged in text window and bottom of window about errors or successes.
-    Currently just prints button name in text window when buttons are pressed.
   
   ## Buttons
   
@@ -65,7 +63,9 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
       
     Gen. Key:
       Generates a key for the user, in the event they don't want to provide their own during ecryption.
-      Need to cause error notification if trying to do this when decrypting, or just mreove this button.
+
+    Gen. IV:
+      Generates an initialization vector for use during CBC AES mode.
       
   ## Text Fields
   
@@ -79,5 +79,8 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
     Out Directory:
       Text field for user to provide the desired directory for the resulting encrypted/decrypted file to be placed in.
       Will default to same directory as the file given to be encrypted/decrypted.
+
+  ## Radio Buttons  
+    Provide options for key sizes and AES modes.
 
 
