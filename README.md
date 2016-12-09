@@ -24,15 +24,7 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
 # To run unit tests for AES encryption and decryption:
 `python3 aes_test.py`
 
-# This project includes the following files:
-
-## aes.ico
-
-    Icon image file for thumbnail of GUI.
-  
-## test_img.jpg
-
-    Temporary image file used in aes_io.py to test file I/O. 
+# This project includes the following files: 
   
 ## aes_impl.py
 
@@ -83,4 +75,14 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
   ## Radio Buttons  
     Provide options for key sizes and AES modes.
 
+## aes.ico
 
+    Icon image file for thumbnail of GUI.
+  
+## test_img.jpg
+
+    Temporary image file used in aes_io.py to test file I/O.
+
+## helper_functions.py
+
+    Provides functions for generating keys and initialization vectors, as well as performing number conversions.
