@@ -49,7 +49,7 @@ def encrypt_click():
     key_schedule = get_key_schedule(key_entry.get())
 
     if enc_mode.get() == 0:
-        log("Encrypt: {}, {}, EBC, {}, {}"
+        log("Encrypt: {}, {}, ECB, {}, {}"
             .format(file_path, out_path,
                     4*len(key_entry.get()), key_entry.get()))
         out_file = aes_io.encrypt_file(key_schedule, file_path, out_path)
@@ -92,7 +92,7 @@ def decrypt_click():
     key_schedule = get_key_schedule(key_entry.get())
 
     if enc_mode.get() == 0:
-        log("Decrypt: {}, {}, EBC, {}, {}"
+        log("Decrypt: {}, {}, ECB, {}, {}"
             .format(file_path, out_path,
                     4*len(key_entry.get()), key_entry.get()))
         out_file = aes_io.decrypt_file(key_schedule, file_path, out_path)
