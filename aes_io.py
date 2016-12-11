@@ -44,20 +44,22 @@ def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
         for chunk,_ in read_chunks(rfile, chunk_size):
             # Process 16 length chunk into 4 lists containing 4 numbers
             processed_chunk = [list(chunk[i*4:(i+1)*4]) for i in range(len(chunk)//4)]
-            
+
             # Perform aes encryption
             encrypted_chunk = encrypt(processed_chunk)
-            
+
             # Convert the encrypted chunk back into a byte object
             encrypted_byte_object = b''.join(bytes(i) for i in encrypted_chunk)
 
             # Write chunk to output file
             wfile.write(encrypted_byte_object)
 
+    return out_file
+
 def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
 
     decrypt_filesize = os.path.getsize(in_file)
-    
+
     # If no output file name passed, creates one based on input file name
     if not out_file:
         out_file = os.path.splitext(in_file)[0]
@@ -93,10 +95,11 @@ def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
 
         # Truncates output file to original size, removing buffer
         wfile.truncate(decrypt_filesize)
-        
+
+    return out_file
 # Driving function for testing
 def main():
-    
+
     # Testing has been moved to aes_test.py
 
     key = helper.generate_random_key(16)
