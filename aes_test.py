@@ -12,7 +12,7 @@ class AESTest(unittest.TestCase):
 
         def test_ecb_on_file(self):
                 key = helper.generate_random_key(16)
-                key_schedule, _ = aes.gen_key_schedule(key)
+                key_schedule = aes.gen_key_schedule(key)
 
                 aes_io.encrypt_file(key_schedule, self.test_file_path, self.test_encrypt_path, mode=aes.Mode.ecb)
                 self.assertFalse(filecmp.cmp(self.test_file_path, self.test_encrypt_path))
@@ -24,7 +24,7 @@ class AESTest(unittest.TestCase):
                 data = helper.get_byte_list_from("This is a secret message. Such secret. Much crypto. Wow aes. xD.")
 
                 key = helper.generate_random_key(16)
-                key_schedule, _ = aes.gen_key_schedule(key)
+                key_schedule = aes.gen_key_schedule(key)
 
                 encrypt = aes.ecb_encryption(key_schedule)
                 encrypted_data = encrypt(data)
@@ -39,7 +39,7 @@ class AESTest(unittest.TestCase):
                 data_size = 16
 
                 key = helper.generate_random_key(data_size)
-                key_schedule, _ = aes.gen_key_schedule(key)
+                key_schedule = aes.gen_key_schedule(key)
 
                 iv = helper.initialization_vector(data_size)
                 iv = helper.convert_to_state_matrix(iv)
@@ -58,7 +58,7 @@ class AESTest(unittest.TestCase):
                 data_size = len(data) * 4
 
                 key = helper.generate_random_key(data_size)
-                key_schedule, _ = aes.gen_key_schedule(key)
+                key_schedule = aes.gen_key_schedule(key)
 
                 iv = helper.initialization_vector(data_size)
                 iv = helper.convert_to_state_matrix(iv)

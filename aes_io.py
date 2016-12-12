@@ -6,11 +6,25 @@ test_file_path = 'test_img.jpg'
 test_encrypt_path = 'test_encrypt.jpg'
 test_decrypt_path = 'test_decrypt.jpg'
 
-def pkcs5(size):
+def pkcs7(size):
+    """
+    PKCS7 with hard coded 16 byte block length
+    """
     amount_of_padding = 16 - (size % 16)
     return bytes(chr(amount_of_padding) * amount_of_padding, 'utf-8')
 
-def read_chunks(file_handle, chunk_size, padding=pkcs5):
+def read_chunks(file_handle, chunk_size, padding=pkcs7):
+    """
+    Generator to process files. Padding added by default.
+
+    Args:
+        file_handle: file handle to file to be processed (needs 'b' flag)
+        chunk_size: the size of the chunk to pull from the file
+        padding: function to add padding
+    Returns:
+        generator which will yield new chunks for processing
+        until the entirety of the file has been read
+    """
     while True:
         data = file_handle.read(chunk_size)
         if not padding and not data:
@@ -25,7 +39,20 @@ def read_chunks(file_handle, chunk_size, padding=pkcs5):
         yield data, False
 
 def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
+    """
+    Encrypt a file using specified aes mode.
+    
+    Args:
+        key_schedule: list(list(integer)), the key schedule for aes
+        in_file: string, file path of file to be encrypted
+        out_file: string [default: None], file path where the encrypted file should be stored
+        chunk_size: integer [default: 16], the size of the blocks to be processed
+        mode: string [default: "ECB"], aes.Mode.ecb or aes.Mode.cbc
+        iv: list(integer) [default: None], initialization vector needed for aes some modes
 
+    Returns:
+        out_file: string [default: file_path + ".enc"], the filepath of the encrypted file
+    """
     # If no output file name passed, creates one based on input file name
     if not out_file:
         out_file = in_file + '.enc'
@@ -57,7 +84,20 @@ def encrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.M
     return out_file
 
 def decrypt_file(key_schedule, in_file, out_file=None, chunk_size=16, mode=aes.Mode.ecb, iv=None):
+    """
+    Decrypt a file using specified aes mode.
 
+    Args:
+        key_schedule: list(list(integer)), the key schedule for aes
+        in_file: string, file path of file to be decrypted
+        out_file: string [default: None], file path where the decrypted file should be stored
+        chunk_size: integer [default: 16], the size of the blocks to be processed
+        mode: string [default: "ECB"], aes.Mode.ecb or aes.Mode.cbc
+        iv: list(integer) [default: None], initialization vector needed for aes some modes
+
+    Returns:
+        out_file: string [default: file_path without ".enc"], the filepath of the decrypted file
+    """
     decrypt_filesize = os.path.getsize(in_file)
 
     # If no output file name passed, creates one based on input file name

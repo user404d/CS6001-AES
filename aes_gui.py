@@ -14,7 +14,7 @@ def log(msg):
 
 def get_key_schedule(key_as_str):
     key = helper.convert_hex_to_bytes(key_as_str)
-    return aes.gen_key_schedule(key)[0]
+    return aes.gen_key_schedule(key)
 
 def get_iv(iv_as_str):
     iv = helper.convert_hex_to_bytes(iv_as_str)
@@ -107,6 +107,9 @@ def decrypt_click():
 
     log("Decrypt: Decrypted {} as {}".format(file_path, out_file))
 
+"""
+Config Checkbox Select Event
+"""
 def enable_config():
     if config_enabled.get():
         key_entry['state'] = 'disabled'
@@ -118,6 +121,9 @@ def enable_config():
             iv_entry['state'] = 'normal'
         log("Config: Disabled.")
 
+"""
+Write Config File
+"""
 def write_config():
     config_path = config_entry_text.get()
     if os.path.isfile(config_path):
@@ -155,6 +161,9 @@ def write_config():
     log("Config: '{}' written.".format(config_path))
     return True
 
+"""
+Read Config File
+"""
 def read_config():
     config_path = config_entry_text.get()
     if not os.path.isfile(config_path):
@@ -182,7 +191,7 @@ def read_config():
     key_entry_text.set(key)
     iv_entry_text.set(iv)
 
-    rbs[0 if mode == "ecb" else 1].invoke()
+    modes[0 if mode == "ecb" else 1].invoke()
 
     if key_size == 16:
         keysizes[0].invoke()
@@ -211,6 +220,9 @@ def gen_key_click():
 
     log("Gen Key: Generated.")
 
+"""
+On click functionality of 'Gen. IV' button.
+"""
 def gen_iv_click():
     iv = helper.initialization_vector()
     
@@ -218,6 +230,9 @@ def gen_iv_click():
 
     log("Gen IV: Generated.")
 
+"""
+ECB Mode Select Event
+"""
 def ecb_mode_select():
 
     gen_iv_button.config(state='disabled')
@@ -225,6 +240,9 @@ def ecb_mode_select():
     
     log("ECB: Selected.")
 
+"""
+CBC Mode Select Event
+"""
 def cbc_mode_select():
 
     gen_iv_button.config(state='normal')
@@ -320,9 +338,9 @@ log_text.grid(column=0, row=0)
 
 modesframe = ttk.Frame(bottomframe)
 modesframe.grid(column=1, row=0, padx=(35,0))
-rbs = [ ttk.Radiobutton(modesframe, text='ECB', variable=enc_mode, value=0, command=ecb_mode_select),
+modes = [ ttk.Radiobutton(modesframe, text='ECB', variable=enc_mode, value=0, command=ecb_mode_select),
         ttk.Radiobutton(modesframe, text='CBC', variable=enc_mode, value=1, command=cbc_mode_select), ]
-for i,rb in enumerate(rbs): rb.grid(column=0, row=i)
+for i,rb in enumerate(modes): rb.grid(column=0, row=i)
 
 keysizeframe = ttk.Frame(bottomframe)
 keysizeframe.grid(column=2, row=0)
@@ -335,7 +353,7 @@ for i,keysize in enumerate(keysizes): keysize.grid(column=0, row=i)
 for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
 
 keysizes[0].invoke()
-rbs[0].invoke()
+modes[0].invoke()
 
 # Main event loop needed to make everything run
 root.mainloop()

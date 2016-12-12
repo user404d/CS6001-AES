@@ -45,8 +45,24 @@ def convert_to_state_matrix(lst):
     return [lst[i:i + 4] for i in range(0, len(lst), 4)]
 
 def convert_hex_to_bytes(hex_str):
+    """
+    Take hex string and convert it to list of bytes
+
+    Args:
+        hex_str: hex string
+    Returns:
+        list of bytes
+    """
     hex_str = hex_str[2:] if hex_str[:2] == "0x" else hex_str
     return list(bytes([int(hex_str[i:i+2],16) for i in range(0, len(hex_str), 2)]))
 
-def convert_bytes_to_hex(byte_str):
-    return ''.join(map("{:02x}".format, byte_str))
+def convert_bytes_to_hex(bytes_list):
+    """
+    Take list of bytes and convert to hex string representation
+
+    Args:
+        byte_str: list(byte)
+    Returns:
+        hex string representation of the bstr
+    """
+    return ''.join(map("{:02x}".format, bytes_list))

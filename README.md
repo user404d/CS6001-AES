@@ -21,6 +21,33 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
   Note: If `Out Directory` input is empty, will overwrite original input file (e.g. test.png).  
 8.  Click the `Decrypt` button  
 
+# Optional: Provide configuration file containing mode and key information
+1.  `python3 aes_gui.py`
+2.  In `File Path` textbox: enter in full file path to file that you would like to encrypt  
+  Example: `/Users/username/Desktop/test.png`  
+  Note: If `Out Directory` input is empty, the program will create an encrypted file with `.enc` appended to the end (e.g. test.png.enc).  
+3.  Select checkbox next to `Config` textbox.  
+  Note: This disables entry into `Key` and `Initialization Vector` fields.  
+4.  In `Config` textbox: enter in full file path to file that has `JSON` configuration settings.  
+  Example: `/Users/username/Desktop/test.png.conf`  
+  Note: If `Config` input is empty, the program will create a configuration file with given settings upon `Encrypt`ion.
+        The file path for the `Config` will be the input `File Path` with '.conf' appended (e.g. test.png.conf).  
+5.  Click `Encrypt` button  
+  Note: If the `Key` or `Initialization Vector` fields are empty, then they will be generated automatically when necessary.  
+
+#\##  Note: `Decrypt` will fail when `Config` is enabled, but no `Config` file is found or the file is ill formatted.  
+
+# Example `Config`
+
+```javascript
+{
+  "mode": "ecb",
+  "key-size": 16, // key size in bytes
+  "key": xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, // key in hex string format (leading 0x can be omitted)
+  // "iv": xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, not necessary for ecb mode
+}
+```
+
 # To run unit tests for AES encryption and decryption:
 `python3 aes_test.py`
 

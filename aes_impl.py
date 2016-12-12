@@ -1,4 +1,3 @@
-
 import copy
 from enum import Enum
 
@@ -8,6 +7,9 @@ class Mode(Enum):
 
 """
 A bunch of magic constants (precomputed heavy lifting)
+
+Tables are from https://github.com/serprex/pythonaes/blob/master/aespython/aes_tables.py
+
 """
 s_box = (
     b'\x63\x7c\x77\x7b\xf2\x6b\x6f\xc5\x30\x01\x67\x2b\xfe\xd7\xab\x76',
@@ -215,7 +217,7 @@ def inv_shift_rows(state):
 def mix_cols(state):
     """
     s0' = ({02} * s0) ^ ({03} * s1) ^ s2 ^ s3
-    blahblah
+    etc.
     """
     for s in state:
         s[0],s[1],s[2],s[3] = (sub_byte(s[0],a_x_2) ^ sub_byte(s[1],a_x_3) ^ s[2] ^ s[3],
@@ -226,7 +228,7 @@ def mix_cols(state):
 def inv_mix_cols(state):
     """
     s0' = ({0e} * s0) ^ ({0b} * s1) ^ ({0d} * s2) ^ ({09} * s3)
-    blahblah
+    etc.
     """
     for s in state:
         s[0],s[1],s[2],s[3] = (sub_byte(s[0],a_inv_x_e) ^ sub_byte(s[1],a_inv_x_b) ^ sub_byte(s[2],a_inv_x_d) ^ sub_byte(s[3],a_inv_x_9),
@@ -275,12 +277,8 @@ def gen_key_schedule(key):
             elif nk > 6 and i % nk == 4:
                 key_schedule[i] = [sub_byte(b,s_box) for b in key_schedule[i]]
             key_schedule[i] = [b ^ w_i for b,w_i in zip(key_schedule[i - nk],key_schedule[i])]
-        inv_key_schedule[i] = key_schedule[i]
 
-    for i in range(1,nr):
-        inv_mix_cols(inv_key_schedule[i*4:(i+1)*4])
-
-    return key_schedule,inv_key_schedule
+    return key_schedule
 
 """
 Encryption 
@@ -385,22 +383,3 @@ def cbc_decryption(key_schedule, initialization_vector):
         return plaintext
 
     return dec
-
-# def nice_decrypt(data, inv_key_schedule):
-#     """
-#     currently borked, is this fixed?
-#     """
-#     state = data
-#     add_round_key(state, inv_key_schedule[-4:])
-
-#     for r in reversed(range(1,len(inv_key_schedule)//4 - 1)):
-#         sub_bytes(state, is_box)
-#         inv_shift_rows(state)
-#         inv_mix_cols(state)
-#         add_round_key(state, inv_key_schedule[r*4:(r+1)*4])
-
-#     sub_bytes(state, is_box)
-#     inv_shift_rows(state)
-#     add_round_key(state, inv_key_schedule[0:4])
-    
-#     return state
