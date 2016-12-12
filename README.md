@@ -35,7 +35,7 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
 5.  Click `Encrypt` button  
   Note: If the `Key` or `Initialization Vector` fields are empty, then they will be generated automatically when necessary.  
 
-#\##  Note: `Decrypt` will fail when `Config` is enabled, but no `Config` file is found or the file is ill formatted.  
+###  Note: `Decrypt` will fail when `Config` is enabled, but no `Config` file is found or the file is ill formatted.  
 
 # Example `Config`
 
@@ -72,7 +72,7 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
     Takes file path, key, and output directory as input.
     Clicking buttons will result in actions, with information logged in text window and bottom of window about errors or successes.
   
-  ## Buttons
+## Buttons
   
     Encrypt: 
       Takes the file path and key and encrypt the file with that key, placing it within the desired output directory.
@@ -86,7 +86,7 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
     Gen. IV:
       Generates an initialization vector for use during CBC AES mode.
       
-  ## Text Fields
+## Text Fields
   
     File Path:
       Text field for user to provide file path of the file they want to encrypt or decrypt.
@@ -99,7 +99,7 @@ Authors: Quincy Conduff, Scott Payne, Colin Conduff
       Text field for user to provide the desired directory for the resulting encrypted/decrypted file to be placed in.
       Will default to same directory as the file given to be encrypted/decrypted.
 
-  ## Radio Buttons  
+## Radio Buttons  
     Provide options for key sizes and AES modes.
 
 ## aes.ico
