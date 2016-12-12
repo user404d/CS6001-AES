@@ -257,7 +257,8 @@ def cbc_mode_select():
 root = Tk()
 root.resizable(0,0) # Prevents resizing window
 root.title("AES Encryption App")
-root.iconbitmap('aes.ico')
+if "nt" == os.name:
+    root.iconbitmap(default='aes.ico')
 
 path_entry_text = StringVar()
 key_entry_text = StringVar()
